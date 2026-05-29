@@ -23,10 +23,10 @@ const DEFAULT_MONTHLY_PASS = 90;
 
 export default function App() {
   // --- ESTADOS DA CALCULADORA ---
-  const [currentGems, setCurrentGems] = useState(0);
+  const [currentGems, setCurrentGems] = useState(1600);
   const [currentPulls, setCurrentPulls] = useState(0);
   const [targetDays, setTargetDays] = useState(30);
-  const [hasMonthlyPass, setHasMonthlyPass] = useState(false);
+  const [hasMonthlyPass, setHasMonthlyPass] = useState(true);
   const [hasBattlePass, setHasBattlePass] = useState(false);
   const [extraGems, setExtraGems] = useState(0);
 
@@ -71,41 +71,52 @@ export default function App() {
 
   const { totalPulls, totalGems, remainingGems } = calculateResources();
 
+  // --- NOVA AVALIAÇÃO DE PROBABILIDADE COM % ---
   const getPityStatus = (pulls) => {
-    if (pulls >= 180)
-      return {
-        text: "Garantia Absoluta (Hard Pity + 50/50)",
-        color: "text-emerald-400",
-        bg: "bg-emerald-400/10",
-        border: "border-emerald-400/20",
-      };
-    if (pulls >= 150)
-      return {
-        text: "Altíssima Chance (Soft Pity + Garantido)",
-        color: "text-blue-400",
-        bg: "bg-blue-400/10",
-        border: "border-blue-400/20",
-      };
-    if (pulls >= 90)
-      return {
-        text: "Garantia de 5 Estrelas (Pode perder o 50/50)",
-        color: "text-yellow-400",
-        bg: "bg-yellow-400/10",
-        border: "border-yellow-400/20",
-      };
-    if (pulls >= 75)
-      return {
-        text: "Soft Pity Alcançado (Boas chances)",
-        color: "text-orange-400",
-        bg: "bg-orange-400/10",
-        border: "border-orange-400/20",
-      };
-    return {
-      text: "Chances Baixas (Depende de Sorte)",
-      color: "text-red-400",
-      bg: "bg-red-400/10",
-      border: "border-red-400/20",
-    };
+    let percent = 0;
+    let text, color, bg, border, barColor;
+
+    if (pulls >= 180) {
+      percent = 100;
+      text = "Garantia Absoluta (Hard Pity + 50/50)";
+      color = "text-emerald-400";
+      bg = "bg-emerald-400/10";
+      border = "border-emerald-400/20";
+      barColor = "bg-emerald-400";
+    } else if (pulls >= 150) {
+      percent = 90 + Math.floor(((pulls - 150) / 30) * 9); // De 90% a 99%
+      text = "Altíssima Chance (Soft Pity + Garantido)";
+      color = "text-blue-400";
+      bg = "bg-blue-400/10";
+      border = "border-blue-400/20";
+      barColor = "bg-blue-400";
+    } else if (pulls >= 90) {
+      percent = 50 + Math.floor(((pulls - 90) / 60) * 39); // De 50% a 89%
+      text = "Garantia de 5★ (Sujeito a 50/50)";
+      color = "text-yellow-400";
+      bg = "bg-yellow-400/10";
+      border = "border-yellow-400/20";
+      barColor = "bg-yellow-400";
+    } else if (pulls >= 75) {
+      percent = 30 + Math.floor(((pulls - 75) / 15) * 19); // De 30% a 49%
+      text = "Soft Pity Alcançado (Boas chances)";
+      color = "text-orange-400";
+      bg = "bg-orange-400/10";
+      border = "border-orange-400/20";
+      barColor = "bg-orange-400";
+    } else {
+      percent = Math.floor((pulls / 75) * 29); // De 0% a 29%
+      text = "Chances Baixas (Depende de Sorte)";
+      color = "text-red-400";
+      bg = "bg-red-400/10";
+      border = "border-red-400/20";
+      barColor = "bg-red-400";
+    }
+
+    // Limitador de segurança para não mostrar menos de 0 ou mais de 100
+    percent = Math.max(0, Math.min(100, percent));
+
+    return { percent, text, color, bg, border, barColor };
   };
 
   const pityStatus = getPityStatus(totalPulls);
@@ -171,7 +182,7 @@ export default function App() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              GachaPlanner Pro
+              GachaPlanner
             </h1>
           </div>
           <div className="flex gap-2">
@@ -323,21 +334,43 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* NOVO PAINEL DE PROBABILIDADE VISUAL COM BARRA */}
                 <div
-                  className={`p-4 rounded-xl border ${pityStatus.bg} ${pityStatus.border} flex items-start gap-3 transition-colors duration-300`}
+                  className={`p-6 rounded-xl border ${pityStatus.bg} ${pityStatus.border} transition-colors duration-300`}
                 >
-                  <AlertCircle
-                    className={`w-6 h-6 shrink-0 mt-0.5 ${pityStatus.color}`}
-                  />
-                  <div>
-                    <h3 className={`font-semibold ${pityStatus.color}`}>
-                      Análise de Probabilidade
-                    </h3>
-                    <p className="text-slate-300 text-sm mt-1">
-                      Com base nos recursos projetados, seu status no banner
-                      será: <strong>{pityStatus.text}</strong>. (Considerando
-                      Hard Pity em 90 e Soft Pity a partir de 75).
-                    </p>
+                  <div className="flex items-center gap-5 mb-4">
+                    {/* Crachá circular de Porcentagem */}
+                    <div
+                      className={`flex items-center justify-center w-16 h-16 rounded-full border-4 ${pityStatus.border} bg-slate-950/30 shrink-0 shadow-inner`}
+                    >
+                      <span
+                        className={`text-xl font-black ${pityStatus.color}`}
+                      >
+                        {pityStatus.percent}%
+                      </span>
+                    </div>
+
+                    {/* Textos */}
+                    <div>
+                      <h3
+                        className={`font-bold text-lg flex items-center gap-2 ${pityStatus.color}`}
+                      >
+                        <AlertCircle className="w-5 h-5" />
+                        {pityStatus.text}
+                      </h3>
+                      <p className="text-slate-300 text-sm mt-1">
+                        Chance estimada de conseguir o{" "}
+                        <strong>personagem promocional</strong> no banner.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Barra de Progresso */}
+                  <div className="w-full bg-slate-950/50 rounded-full h-3 overflow-hidden border border-slate-800/50">
+                    <div
+                      className={`h-full ${pityStatus.barColor} transition-all duration-1000 ease-out`}
+                      style={{ width: `${pityStatus.percent}%` }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -380,7 +413,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* NOVA SESSÃO: HISTÓRICO DE PITY */}
+          {/* SESSÃO: HISTÓRICO DE PITY */}
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold flex items-center gap-2">
