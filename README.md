@@ -15,20 +15,21 @@ Uma calculadora de recursos inteligente e interativa (Single-Page Application) p
 
 O GachaPlanner Pro resolve um problema comum: _terei recursos suficientes para garantir aquele personagem no próximo patch?_
 
-A aplicação recebe os recursos atuais do usuário, o tempo até o banner desejado e as assinaturas ativas, projetando instantaneamente o saldo final de **Stellar Jades** e **Pulls**, além de fornecer uma análise de probabilidade baseada no sistema de "Pity" do jogo.
+A aplicação recebe os recursos atuais do usuário, o tempo até o banner desejado e as assinaturas ativas, projetando instantaneamente o saldo final de **Stellar Jades** e **Pulls**. Além disso, fornece uma análise visual das suas chances reais e permite manter um histórico dos seus resultados em banners anteriores.
 
 ## ✨ Funcionalidades
 
 - **Cálculo de Projeção:** Estima o ganho de Stellar Jades ao longo de "X" dias.
 - **Integração de Assinaturas:** Inclui ganhos do _Supply Pass_ (Passe Mensal) e do Passe de Batalha automaticamente.
-- **Análise de Pity (Probabilidade):** Informa ao usuário suas chances reais com base nos pulls calculados (Hard Pity, Soft Pity, 50/50).
+- **Análise Visual de Probabilidade (%):** Informa ao usuário suas chances estimadas de 0% a 100% de obter o personagem promocional, acompanhada de uma barra de progresso animada baseada nos cálculos de Hard Pity, Soft Pity e 50/50.
+- **Histórico de Pity Local:** Registre e gerencie os personagens obtidos, número de pulls gastos e o resultado do 50/50. Tudo é salvo automaticamente no seu navegador (`localStorage`).
 - **Interface Responsiva:** Design limpo e moderno que se adapta a celulares e desktops, com feedback visual imediato.
 
 ## 🚀 Tecnologias Utilizadas
 
 Este projeto foi construído utilizando as seguintes tecnologias:
 
-- **[React](https://reactjs.org/)** (com Hooks para gerenciamento de estado)
+- **[React](https://reactjs.org/)** (com Hooks `useState` e `useEffect` para gerenciamento de estado e cache)
 - **[Vite](https://vitejs.dev/)** (como bundler rápido)
 - **[Tailwind CSS](https://tailwindcss.com/)** (versão 3, para estilização utilitária e responsiva)
 - **[Lucide React](https://lucide.dev/)** (para iconografia consistente)
@@ -69,13 +70,5 @@ Se você deseja clonar e rodar este projeto na sua própria máquina, siga os pa
    ```
 
 5. O terminal exibirá um link local (geralmente `http://localhost:5173`). Abra-o no seu navegador para ver a aplicação funcionando!
-
----
-
-## 💡 Próximos Passos (Roadmap)
-
-- [ ] Adicionar suporte a múltiplos jogos (ex: alternar para versão Genshin Impact ou Zenless Zone Zero).
-- [ ] Implementar histórico de "Pity" personalizado pelo usuário.
-- [ ] Salvar os dados localmente usando `localStorage` para que o usuário não perca as informações ao fechar a aba.
 
 ---
