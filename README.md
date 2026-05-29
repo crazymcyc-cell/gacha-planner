@@ -1,73 +1,83 @@
-🌟 GachaPlanner Pro
+# 🌟 GachaPlanner Pro
 
-Uma calculadora de recursos inteligente e interativa (Single-Page Application) projetada para ajudar jogadores de Honkai: Star Rail (e outros jogos Gacha) a planejarem seus gastos e acúmulos a longo prazo.
+![Status do Projeto](https://img.shields.io/badge/Status-Conclu%C3%ADdo-success)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E)
 
-🔗 Acesse o projeto online aqui
+Uma calculadora de recursos inteligente e interativa (Single-Page Application) projetada para ajudar jogadores de **Honkai: Star Rail** (e outros jogos Gacha) a planejarem seus gastos e acúmulos a longo prazo.
 
-🎯 Sobre o Projeto
+🔗 **[Acesse o projeto online aqui](Insira_Aqui_O_Link_Da_Sua_Vercel_Depois)**
 
-O GachaPlanner Pro resolve um problema comum: terei recursos suficientes para garantir aquele personagem no próximo patch?
+---
 
-A aplicação recebe os recursos atuais do usuário, o tempo até o banner desejado e as assinaturas ativas, projetando instantaneamente o saldo final de Stellar Jades e Pulls, além de fornecer uma análise de probabilidade baseada no sistema de "Pity" do jogo.
+## 🎯 Sobre o Projeto
 
-✨ Funcionalidades
+O GachaPlanner Pro resolve um problema comum: _terei recursos suficientes para garantir aquele personagem no próximo patch?_
 
-Cálculo de Projeção: Estima o ganho de Stellar Jades ao longo de "X" dias.
+A aplicação recebe os recursos atuais do usuário, o tempo até o banner desejado e as assinaturas ativas, projetando instantaneamente o saldo final de **Stellar Jades** e **Pulls**, além de fornecer uma análise de probabilidade baseada no sistema de "Pity" do jogo.
 
-Integração de Assinaturas: Inclui ganhos do Supply Pass (Passe Mensal) e do Passe de Batalha automaticamente.
+## ✨ Funcionalidades
 
-Análise de Pity (Probabilidade): Informa ao usuário suas chances reais com base nos pulls calculados (Hard Pity, Soft Pity, 50/50).
+- **Cálculo de Projeção:** Estima o ganho de Stellar Jades ao longo de "X" dias.
+- **Integração de Assinaturas:** Inclui ganhos do _Supply Pass_ (Passe Mensal) e do Passe de Batalha automaticamente.
+- **Análise de Pity (Probabilidade):** Informa ao usuário suas chances reais com base nos pulls calculados (Hard Pity, Soft Pity, 50/50).
+- **Interface Responsiva:** Design limpo e moderno que se adapta a celulares e desktops, com feedback visual imediato.
 
-Interface Responsiva: Design limpo e moderno que se adapta a celulares e desktops, com feedback visual imediato.
-
-🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
 Este projeto foi construído utilizando as seguintes tecnologias:
 
-React (com Hooks para gerenciamento de estado)
+- **[React](https://reactjs.org/)** (com Hooks para gerenciamento de estado)
+- **[Vite](https://vitejs.dev/)** (como bundler rápido)
+- **[Tailwind CSS](https://tailwindcss.com/)** (versão 3, para estilização utilitária e responsiva)
+- **[Lucide React](https://lucide.dev/)** (para iconografia consistente)
 
-Vite (como bundler rápido)
-
-Tailwind CSS (versão 3, para estilização utilitária e responsiva)
-
-Lucide React (para iconografia consistente)
-
-💻 Como rodar o projeto localmente
+## 💻 Como rodar o projeto localmente
 
 Se você deseja clonar e rodar este projeto na sua própria máquina, siga os passos abaixo:
 
-Pré-requisitos:
+**Pré-requisitos:**
 
-Node.js instalado (versão LTS recomendada).
+- [Node.js](https://nodejs.org/en/) instalado (versão LTS recomendada).
+- Git instalado.
 
-Git instalado.
+**Passo a passo:**
 
-Passo a passo:
+1. Clone este repositório:
 
-Clone este repositório:
+   ```bash
+   git clone https://github.com/SEU_USUARIO/gacha-planner-honkai.git
+   ```
 
-git clone https://github.com/SEU_USUARIO/gacha-planner-honkai.git
+2. Entre na pasta do projeto:
 
-Entre na pasta do projeto:
+   ```bash
+   cd gacha-planner-honkai
+   ```
 
-cd gacha-planner-honkai
+3. Instale as dependências:
 
-Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-npm install
+4. Inicie o servidor de desenvolvimento:
 
-Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
 
-npm run dev
+5. O terminal exibirá um link local (geralmente `http://localhost:5173`). Abra-o no seu navegador para ver a aplicação funcionando!
 
-O terminal exibirá um link local (geralmente http://localhost:5173). Abra-o no seu navegador para ver a aplicação funcionando!
+---
 
-💡 Próximos Passos (Roadmap)
+## 💡 Próximos Passos (Roadmap)
 
-[ ] Adicionar suporte a múltiplos jogos (ex: alternar para versão Genshin Impact ou Zenless Zone Zero).
+- [ ] Adicionar suporte a múltiplos jogos (ex: alternar para versão Genshin Impact ou Zenless Zone Zero).
+- [ ] Implementar histórico de "Pity" personalizado pelo usuário.
+- [ ] Salvar os dados localmente usando `localStorage` para que o usuário não perca as informações ao fechar a aba.
 
-[ ] Implementar histórico de "Pity" personalizado pelo usuário.
-
-[ ] Salvar os dados localmente usando localStorage para que o usuário não perca as informações ao fechar a aba.
+---
 
 Feito com 💜 para a comunidade.
