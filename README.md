@@ -7,7 +7,7 @@
 
 Uma calculadora de recursos inteligente e interativa (Single-Page Application) projetada para ajudar jogadores de **Honkai: Star Rail** (e outros jogos Gacha) a planejarem seus gastos e acúmulos a longo prazo.
 
-🔗 **[Acesse o projeto online aqui](Insira_Aqui_O_Link_Da_Sua_Vercel_Depois)**
+🔗 **[Acesse o projeto online aqui](https://gacha-planner-henna.vercel.app/)**
 
 ---
 
@@ -47,7 +47,7 @@ Se você deseja clonar e rodar este projeto na sua própria máquina, siga os pa
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/SEU_USUARIO/gacha-planner-honkai.git
+   git clone https://github.com/crazymcyc-cell/gacha-planner.git
    ```
 
 2. Entre na pasta do projeto:
@@ -79,5 +79,3 @@ Se você deseja clonar e rodar este projeto na sua própria máquina, siga os pa
 - [ ] Salvar os dados localmente usando `localStorage` para que o usuário não perca as informações ao fechar a aba.
 
 ---
-
-Feito com 💜 para a comunidade.
