@@ -23,12 +23,12 @@ const DEFAULT_MONTHLY_PASS = 90;
 
 export default function App() {
   // --- ESTADOS DA CALCULADORA ---
-  const [currentGems, setCurrentGems] = useState(1600);
+  const [currentGems, setCurrentGems] = useState(0);
   const [currentPulls, setCurrentPulls] = useState(0);
-  const [targetDays, setTargetDays] = useState(30);
-  const [hasMonthlyPass, setHasMonthlyPass] = useState(true);
+  const [targetDays, setTargetDays] = useState(44);
+  const [hasMonthlyPass, setHasMonthlyPass] = useState(false);
   const [hasBattlePass, setHasBattlePass] = useState(false);
-  const [extraGems, setExtraGems] = useState(0);
+  const [extraGems, setExtraGems] = useState(9090);
 
   // --- ESTADOS DO HISTÓRICO DE PITY (Com LocalStorage) ---
   const [pityHistory, setPityHistory] = useState(() => {
