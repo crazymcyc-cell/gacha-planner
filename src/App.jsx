@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Calculator,
   CalendarDays,
@@ -9,9 +9,14 @@ import {
   Plus,
   TrendingUp,
   AlertCircle,
+  History,
+  Trophy,
+  XCircle,
+  Star,
+  Trash2,
 } from "lucide-react";
 
-// --- CONFIGURAÇÕES PADRÃO (Baseado em HSR) ---
+// --- CONFIGURAÇÕES PADRÃO ---
 const DEFAULT_PULL_COST = 160;
 const DEFAULT_DAILY_REWARD = 60;
 const DEFAULT_MONTHLY_PASS = 90;
@@ -22,19 +27,32 @@ export default function App() {
   const [currentPulls, setCurrentPulls] = useState(0);
   const [targetDays, setTargetDays] = useState(30);
   const [hasMonthlyPass, setHasMonthlyPass] = useState(false);
-  const [hasBattlePass, setHasBattlePass] = useState(false); // BP dá aprox 4 tiros e 680 gemas por patch (42 dias)
-  const [extraGems, setExtraGems] = useState(0); // Eventos, abismo, etc.
+  const [hasBattlePass, setHasBattlePass] = useState(false);
+  const [extraGems, setExtraGems] = useState(0);
+
+  // --- ESTADOS DO HISTÓRICO DE PITY (Com LocalStorage) ---
+  const [pityHistory, setPityHistory] = useState(() => {
+    const saved = localStorage.getItem("gachaPityHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [historyName, setHistoryName] = useState("");
+  const [historyPity, setHistoryPity] = useState("");
+  const [historyResult, setHistoryResult] = useState("won");
+
+  // Salvar no LocalStorage sempre que o histórico mudar
+  useEffect(() => {
+    localStorage.setItem("gachaPityHistory", JSON.stringify(pityHistory));
+  }, [pityHistory]);
 
   // --- LÓGICA DE CÁLCULO ---
   const calculateResources = () => {
     let totalGems = currentGems + Number(extraGems);
 
-    // Ganhos diários
     const dailyIncome =
       DEFAULT_DAILY_REWARD + (hasMonthlyPass ? DEFAULT_MONTHLY_PASS : 0);
     totalGems += dailyIncome * targetDays;
 
-    // Ganhos do Passe de Batalha (Simplificado: assumindo 1 BP a cada 42 dias)
     let bpGems = 0;
     let bpPulls = 0;
     if (hasBattlePass) {
@@ -53,7 +71,6 @@ export default function App() {
 
   const { totalPulls, totalGems, remainingGems } = calculateResources();
 
-  // Avaliação de Probabilidade (Pity System)
   const getPityStatus = (pulls) => {
     if (pulls >= 180)
       return {
@@ -93,6 +110,57 @@ export default function App() {
 
   const pityStatus = getPityStatus(totalPulls);
 
+  // --- FUNÇÕES DO HISTÓRICO ---
+  const addHistoryEntry = (e) => {
+    e.preventDefault();
+    if (!historyName.trim() || !historyPity) return;
+
+    const newEntry = {
+      id: Date.now(),
+      name: historyName,
+      pity: Number(historyPity),
+      result: historyResult,
+      date: new Date().toLocaleDateString("pt-BR"),
+    };
+
+    setPityHistory([newEntry, ...pityHistory]);
+    setHistoryName("");
+    setHistoryPity("");
+    setHistoryResult("won");
+  };
+
+  const deleteHistoryEntry = (id) => {
+    setPityHistory(pityHistory.filter((entry) => entry.id !== id));
+  };
+
+  const getResultVisuals = (result) => {
+    switch (result) {
+      case "won":
+        return {
+          icon: <Trophy className="w-4 h-4" />,
+          text: "Ganhou 50/50",
+          color: "text-emerald-400",
+          bg: "bg-emerald-400/10 border-emerald-400/20",
+        };
+      case "lost":
+        return {
+          icon: <XCircle className="w-4 h-4" />,
+          text: "Perdeu 50/50",
+          color: "text-red-400",
+          bg: "bg-red-400/10 border-red-400/20",
+        };
+      case "guaranteed":
+        return {
+          icon: <Star className="w-4 h-4" />,
+          text: "Garantido",
+          color: "text-blue-400",
+          bg: "bg-blue-400/10 border-blue-400/20",
+        };
+      default:
+        return { icon: null, text: "", color: "", bg: "" };
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
       {/* HEADER NAVBAR */}
@@ -117,7 +185,8 @@ export default function App() {
 
       {/* MAIN CONTENT */}
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* SESSÃO DA CALCULADORA (GRID SUPERIOR) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Painel de Entradas */}
             <div className="lg:col-span-1 space-y-6">
@@ -177,7 +246,7 @@ export default function App() {
 
                   <div>
                     <label className="block text-sm text-slate-400 mb-1">
-                      Stellar Jades Extras Previstos (Eventos, Abismo)
+                      Jades Extras Previstos (Eventos, etc)
                     </label>
                     <div className="relative">
                       <Plus className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -198,7 +267,7 @@ export default function App() {
                 </h2>
                 <div className="space-y-3">
                   <label className="flex items-center justify-between p-3 border border-slate-800 rounded-lg hover:bg-slate-800/50 cursor-pointer transition-colors">
-                    <span className="text-sm">Passe Mensal (+90/dia)</span>
+                    <span className="text-sm">Passe Mensal (Supply Pass)</span>
                     <input
                       type="checkbox"
                       checked={hasMonthlyPass}
@@ -308,6 +377,123 @@ export default function App() {
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* NOVA SESSÃO: HISTÓRICO DE PITY */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <History className="w-6 h-6 text-indigo-400" />
+                Histórico de Pulls (5 Estrelas)
+              </h2>
+            </div>
+
+            {/* Formulário de Adição */}
+            <form
+              onSubmit={addHistoryEntry}
+              className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8 bg-slate-950/50 p-4 rounded-xl border border-slate-800"
+            >
+              <div className="md:col-span-4">
+                <label className="block text-sm text-slate-400 mb-1">
+                  Personagem
+                </label>
+                <input
+                  type="text"
+                  value={historyName}
+                  onChange={(e) => setHistoryName(e.target.value)}
+                  placeholder="Ex: Acheron"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                />
+              </div>
+              <div className="md:col-span-3">
+                <label className="block text-sm text-slate-400 mb-1">
+                  Nº do Pity
+                </label>
+                <input
+                  type="number"
+                  max="90"
+                  min="1"
+                  value={historyPity}
+                  onChange={(e) => setHistoryPity(e.target.value)}
+                  placeholder="Ex: 78"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                />
+              </div>
+              <div className="md:col-span-3">
+                <label className="block text-sm text-slate-400 mb-1">
+                  Resultado
+                </label>
+                <select
+                  value={historyResult}
+                  onChange={(e) => setHistoryResult(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-slate-200"
+                >
+                  <option value="won">Ganhou 50/50</option>
+                  <option value="lost">Perdeu 50/50</option>
+                  <option value="guaranteed">Garantido</option>
+                </select>
+              </div>
+              <div className="md:col-span-2 flex items-end">
+                <button
+                  type="submit"
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  Salvar
+                </button>
+              </div>
+            </form>
+
+            {/* Lista do Histórico */}
+            <div className="space-y-3">
+              {pityHistory.length === 0 ? (
+                <div className="text-center py-8 text-slate-500 bg-slate-950/30 rounded-xl border border-slate-800 border-dashed">
+                  Nenhum personagem registrado ainda. Adicione o seu primeiro 5
+                  estrelas acima!
+                </div>
+              ) : (
+                pityHistory.map((entry) => {
+                  const visuals = getResultVisuals(entry.result);
+                  return (
+                    <div
+                      key={entry.id}
+                      className="group flex items-center justify-between p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center font-bold text-lg text-slate-300 border border-slate-800">
+                          {entry.pity}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-slate-200 text-lg">
+                            {entry.name}
+                          </h3>
+                          <span className="text-xs text-slate-500">
+                            {entry.date}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium ${visuals.bg} ${visuals.color}`}
+                        >
+                          {visuals.icon}
+                          <span className="hidden sm:inline">
+                            {visuals.text}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => deleteHistoryEntry(entry.id)}
+                          className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                          title="Excluir registro"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
